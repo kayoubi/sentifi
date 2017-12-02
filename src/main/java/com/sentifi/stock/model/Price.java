@@ -1,8 +1,10 @@
 package com.sentifi.stock.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sentifi.stock.domain.SymbolCloseDates;
 import lombok.Getter;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,8 +18,8 @@ public class Price {
     @JsonProperty("DateClose")
     private final List<List<String>> dateClose;
 
-    public Price(String ticker, List<List<Object>> dateClose) {
+    public Price(String ticker, List<SymbolCloseDates.CloseDate> dateClose) {
         this.ticker = ticker;
-        this.dateClose = dateClose.stream().map(l -> l.stream().map(Object::toString).collect(Collectors.toList())).collect(Collectors.toList());
+        this.dateClose = dateClose.stream().map(l -> Arrays.asList(l.getDate(), l.getClose())).collect(Collectors.toList());
     }
 }

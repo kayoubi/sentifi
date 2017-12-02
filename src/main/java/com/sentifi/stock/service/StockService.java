@@ -23,6 +23,7 @@ import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author khaled
@@ -49,6 +50,10 @@ public class StockService {
         final Double avg = result.getDataset().getData().stream().mapToDouble(p -> Double.parseDouble(p.get(1).toString())).average().orElse(zero);
         final String oldestAvailableDate = avg.equals(zero) ? result.getDataset().getOldestAvailableDate() : null;
         return new DmaResult(new Dma(symbol, avg.toString(), oldestAvailableDate));
+    }
+
+    public List<DmaResult> get200Dma(final List<String> symbol, final Date startDate) {
+        return symbol.parallelStream().map(s -> get200Dma(s, startDate)).collect(Collectors.toList());
     }
 
     private Result query(final String symbol, final Date startDate, final Date endDate) {

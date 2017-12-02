@@ -30,8 +30,7 @@ public class QuandlProxyService {
     private String apiKey;
 
     SymbolCloseDates query(final String symbol, final Date startDate, final Date endDate) {
-        final String dateFormat = "yyyy-MM-dd";
-        final DateFormat df = new SimpleDateFormat(dateFormat); // need a new instance per thread
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); // need a new instance per thread
         final String url = quandlUrl.concat(symbol).concat(".json?start_date=").concat(df.format(startDate)).concat("&end_date=").concat(df.format(endDate)).concat("&column_index=4&api_key=").concat(apiKey);
         final RestTemplate restTemplate = new RestTemplate();
 

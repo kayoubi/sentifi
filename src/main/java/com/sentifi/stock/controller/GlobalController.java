@@ -25,6 +25,7 @@ public class GlobalController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleError(Exception ex) {
+        ex.printStackTrace();
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

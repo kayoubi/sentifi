@@ -1,7 +1,6 @@
 package com.sentifi.stock.service.cache;
 
 import com.sentifi.stock.domain.SymbolCloseDates;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -11,9 +10,12 @@ import static com.sentifi.stock.util.DateUtil.addDays;
 import static com.sentifi.stock.util.DateUtil.isBetween;
 
 /**
+ * A strategy to match the case where the request date range overlap with cache from the right side (request start date in the cache)
+ *
+ * in this case we query only the date range from (cache end date + 1 -> request end date) and add that to beginning of the cache
+ *
  * @author khaled
  */
-@Service
 public class RightOverlapCacheExtractorStrategy extends CacheExtractorStrategy {
     @Override
     public boolean _match(CachedSymbolCloseDates cache, Date startDate, Date endDate) {

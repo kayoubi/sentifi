@@ -7,6 +7,7 @@ import com.sentifi.stock.domain.SymbolCloseDates;
 import com.sentifi.stock.exceptions.QuandlException;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -29,10 +30,14 @@ public class QuandlProxyService {
     @Value("${apiKey}")
     private String apiKey;
 
+    private final static Logger log = Logger.getLogger(QuandlProxyService.class.getName());
+
     SymbolCloseDates query(final String symbol, final Date startDate, final Date endDate) {
         final DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); // need a new instance per thread
         final String url = quandlUrl.concat(symbol).concat(".json?start_date=").concat(df.format(startDate)).concat("&end_date=").concat(df.format(endDate)).concat("&column_index=4&api_key=").concat(apiKey);
         final RestTemplate restTemplate = new RestTemplate();
+
+        log.info("Query Quandl: ".concat(url));
 
         try {
             Result result = restTemplate.getForObject(url, Result.class);

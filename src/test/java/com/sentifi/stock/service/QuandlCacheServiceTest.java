@@ -1,8 +1,7 @@
 package com.sentifi.stock.service;
 
 import com.sentifi.stock.domain.SymbolCloseDates;
-import com.sentifi.stock.service.cache.*;
-import org.junit.Before;
+import com.sentifi.stock.service.cache.CachedSymbolCloseDates;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,17 +28,6 @@ public class QuandlCacheServiceTest {
 
     @InjectMocks
     private QuandlCacheService cacheService;
-
-    @Before
-    public void init() {
-        cacheService.strategies = Arrays.asList(
-            new FullOverlapCacheExtractorStrategy(),
-            new InnerOverlapCacheExtractorStrategy(),
-            new LeftOverlapCacheExtractorStrategy(),
-            new NoMatchCacheExtractorStrategy(),
-            new RightOverlapCacheExtractorStrategy()
-        );
-    }
 
     @Test
     public void testNoCacheWillCallTheProxy() {

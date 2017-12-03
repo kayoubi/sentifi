@@ -1,16 +1,18 @@
 package com.sentifi.stock.service.cache;
 
 import com.sentifi.stock.domain.SymbolCloseDates;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 import static com.sentifi.stock.util.DateUtil.isBetween;
 
 /**
+ * A strategy to match the case where the request date range already in the cache
+ *
+ * in this case we just return the cache as is to be filtered
+ *
  * @author khaled
  */
-@Service
 public class FullOverlapCacheExtractorStrategy extends CacheExtractorStrategy {
     @Override
     public boolean _match(CachedSymbolCloseDates cache, Date startDate, Date endDate) {

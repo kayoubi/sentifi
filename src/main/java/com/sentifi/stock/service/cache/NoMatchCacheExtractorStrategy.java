@@ -1,7 +1,6 @@
 package com.sentifi.stock.service.cache;
 
 import com.sentifi.stock.domain.SymbolCloseDates;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
@@ -14,7 +13,6 @@ import java.util.Date;
  *
  * @author khaled
  */
-@Service
 public class NoMatchCacheExtractorStrategy extends CacheExtractorStrategy {
     @Override
     public boolean _match(CachedSymbolCloseDates cache, Date startDate, Date endDate) {

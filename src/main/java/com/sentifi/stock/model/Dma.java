@@ -14,7 +14,7 @@ import lombok.Getter;
 public class Dma {
     @JsonProperty("Ticker")
     private final String ticker;
-    @JsonProperty("Age")
+    @JsonProperty("Avg")
     private final String avg;
     @JsonProperty("OldestAvailableDate")
     private final String oldestAvailableDate;

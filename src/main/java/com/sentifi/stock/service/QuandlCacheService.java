@@ -1,16 +1,12 @@
 package com.sentifi.stock.service;
 
 import com.sentifi.stock.domain.SymbolCloseDates;
-import com.sentifi.stock.service.cache.CacheExtractorStrategy;
-import com.sentifi.stock.service.cache.CachedSymbolCloseDates;
+import com.sentifi.stock.service.cache.*;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.sentifi.stock.util.DateUtil.isBetween;
@@ -22,10 +18,8 @@ import static com.sentifi.stock.util.DateUtil.isBetween;
 public class QuandlCacheService {
     final Map<String, CachedSymbolCloseDates> cache;
     final QuandlProxyService quandlProxyService;
-    List<CacheExtractorStrategy> strategies;
 
-    public QuandlCacheService(QuandlProxyService quandlProxyService, List<CacheExtractorStrategy> strategies) {
-        this.strategies = strategies;
+    public QuandlCacheService(QuandlProxyService quandlProxyService) {
         this.quandlProxyService = quandlProxyService;
         this.cache = new LinkedHashMap<String, CachedSymbolCloseDates>() {
             @Override
@@ -56,12 +50,22 @@ public class QuandlCacheService {
                 if (cachedSymbolCloseDates == null) {
                     return new CachedSymbolCloseDates(startDate, endDate, quandlProxyService.query(symbol, startDate, endDate));
                 }
-                final CacheExtractorStrategy strategy = strategies.stream()
+                final CacheExtractorStrategy strategy = strategies().stream()
                     .filter(cacheExtractorStrategy -> cacheExtractorStrategy.match(cachedSymbolCloseDates, startDate, endDate))
                     .findAny()
                     .orElseThrow(() -> new RuntimeException("Internal Error"));
                 return strategy.apply(strategy.needExtraData() ? quandlProxyService.query(symbol, strategy.getStartDate(), strategy.getEndDate()) : null);
             });
+    }
+
+    private List<CacheExtractorStrategy> strategies() {
+        return Arrays.asList(
+            new FullOverlapCacheExtractorStrategy(),
+            new InnerOverlapCacheExtractorStrategy(),
+            new LeftOverlapCacheExtractorStrategy(),
+            new NoMatchCacheExtractorStrategy(),
+            new RightOverlapCacheExtractorStrategy()
+        );
     }
 
     private Date getDate(final SimpleDateFormat dateFormat, final String date) {

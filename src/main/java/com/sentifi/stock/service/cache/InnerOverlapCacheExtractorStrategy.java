@@ -1,7 +1,5 @@
 package com.sentifi.stock.service.cache;
 
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
 
 /**
@@ -15,7 +13,6 @@ import java.util.Date;
  *
  * @author khaled
  */
-@Service
 public class InnerOverlapCacheExtractorStrategy extends NoMatchCacheExtractorStrategy {
     @Override
     public boolean _match(CachedSymbolCloseDates cache, Date startDate, Date endDate) {
